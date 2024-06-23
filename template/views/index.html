@@ -93,6 +93,14 @@
             margin-bottom: 20px;
         }
 
+        .form-control:invalid {
+            border-color: red;
+        }
+
+        .form-control:valid {
+            border-color: green;
+        }
+
         button[type="submit"] {
             background-color: #ff48009f;
             color: white;
@@ -170,7 +178,6 @@
         .login-form input {
             margin-bottom: 10px;
         }
-
     </style>
 </head>
 
@@ -231,19 +238,19 @@
     <div class="container">
         <div id="blurrr" class="container">
             <h1><b>Donor Registration Form</b></h1>
-            <form action="/alldata" method="POST" class="vivek">
+            <form id="donorForm" action="/alldata" method="POST" class="vivek" onsubmit="return validateForm()">
                 <label for="donorname">Name</label>
-                <input type="text" class="form-control" id="donorname" name="donorname" required placeholder="Name">
+                <input type="text" class="form-control" id="donorname" name="donorname" required placeholder="Name" pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces">
                 
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" name="email" required placeholder="Email">
                 
                 <label for="phone">Phone</label>
-                <input type="tel" class="form-control" id="phone" name="phone" required placeholder="Phone">
+                <input type="tel" class="form-control" id="phone" name="phone" required placeholder="Phone Number" pattern="[0-9]{10}" title="Phone number should be 10 digits">
                 
-                <label for="blood-type">Blood Type</label>
-                <select class="form-control" id="blood-type" name="bloodtype" required>
-                    <option value="">Select blood type</option>
+                <label for="bloodgroup">Blood Group</label>
+                <select class="form-control" id="bloodgroup" name="bloodgroup" required>
+                    <option value="">Select Blood Group</option>
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
                     <option value="B+">B+</option>
@@ -255,7 +262,7 @@
                 </select>
                 
                 <label for="age">Age</label>
-                <input type="number" class="form-control" id="age" name="age" required placeholder="Age">
+                <input type="number" class="form-control" id="age" name="age" required placeholder="Age" min="18" max="65">
                 
                 <label for="gender">Gender</label>
                 <div>
@@ -268,7 +275,7 @@
                 </div>
                 
                 <label for="address">Address</label>
-                <textarea class="form-control" id="address" name="address" required placeholder="Address"></textarea>
+                <textarea class="form-control" id="address" name="address" required placeholder="Address" maxlength="200"></textarea>
                 
                 <button type="submit"><i class="fas fa-paper-plane"></i> Submit</button>
             </form>
@@ -302,6 +309,54 @@
         window.addEventListener('online', () => {
             document.querySelector('.no-internet').classList.remove('active');
         });
+
+        function validateForm() {
+            const form = document.getElementById('donorForm');
+            const donorname = form.donorname;
+            const email = form.email;
+            const phone = form.phone;
+            const age = form.age;
+            const address = form.address;
+            
+            // Custom Validation Logic
+            if (donorname.value.trim() === "") {
+                alert("Please enter your name.");
+                donorname.focus();
+                return false;
+            }
+
+            if (!/^[A-Za-z\s]+$/.test(donorname.value)) {
+                alert("Name should only contain letters and spaces.");
+                donorname.focus();
+                return false;
+            }
+
+            if (email.value.trim() === "") {
+                alert("Please enter your email.");
+                email.focus();
+                return false;
+            }
+
+            if (phone.value.trim() === "" || !/^\d{10}$/.test(phone.value)) {
+                alert("Please enter a valid 10-digit phone number.");
+                phone.focus();
+                return false;
+            }
+
+            if (age.value < 18 || age.value > 65) {
+                alert("Age must be between 18 and 65.");
+                age.focus();
+                return false;
+            }
+
+            if (address.value.trim() === "") {
+                alert("Please enter your address.");
+                address.focus();
+                return false;
+            }
+
+            return true;
+        }
     </script>
 </body>
 </html>
